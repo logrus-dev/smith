@@ -19,6 +19,6 @@ public class AgentDbContext: DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Agent>().Property(x => x.StateJson).HasColumnType("jsonb");
+        modelBuilder.Entity<Agent>().Property(x => x.Params).HasColumnType("jsonb");
     }
 }
