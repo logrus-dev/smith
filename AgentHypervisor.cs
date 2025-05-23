@@ -79,6 +79,8 @@ public class AgentHypervisor(Func<AgentDbContext> getDb, IPluginCollection<IAgen
             Data = result.Data,
             Type = result.Type,
             Agent = agent,
+            Message = result.Message,
+            Score = result.Score,
         });
         agent.UpdatedAt = SystemClock.Instance.GetCurrentInstant();
         return result;
