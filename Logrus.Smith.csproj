@@ -5,6 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>13</LangVersion>
+        
+        <PackageId>Logrus.Smith</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>ikesler</Authors>
+        <Company>logrus.dev</Company>
+        <PackageTags>Agents;AI;Automation;Background Jobs</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <ProjectUrl>https://github.com/logrus-dev/smith</ProjectUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,6 +31,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.5" />
       <PackageReference Include="NodaTime" Version="3.2.2" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="9.0.4" />
@@ -31,5 +42,10 @@
     <ItemGroup>
       <Folder Include="Data\Migrations\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Include="README.md" pack="true" PackagePath="." />
+    </ItemGroup>
+
 
 </Project>
