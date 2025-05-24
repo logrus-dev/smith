@@ -22,6 +22,10 @@ public class Module: IModule
                 .UseNpgsql(dataSettings.DbConnectionString, o =>
                 {
                     o.UseNodaTime();
+                    o.ConfigureDataSource(oo =>
+                    {
+                        oo.EnableDynamicJson();
+                    });
                 })
                 .UseSnakeCaseNamingConvention();
         }, ServiceLifetime.Transient);
