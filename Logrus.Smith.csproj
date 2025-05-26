@@ -7,7 +7,7 @@
         <LangVersion>13</LangVersion>
         
         <PackageId>Logrus.Smith</PackageId>
-        <Version>1.0.2</Version>
+        <Version>1.0.3</Version>
         <Authors>ikesler</Authors>
         <Company>logrus.dev</Company>
         <PackageTags>Agents;AI;Automation;Background Jobs</PackageTags>
