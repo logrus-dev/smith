@@ -1,5 +1,6 @@
 using Logrus.Smith.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace Logrus.Smith.Data;
@@ -20,11 +21,14 @@ public class AgentDbContext: DbContext
 
     private static DbContextOptions<AgentDbContext> UpdateOptions(DbContextOptions<AgentDbContext> options)
     {
-        var cs = options.GetExtension<NpgsqlOptionsExtension>().ConnectionString;
         var optionsBuilder = new DbContextOptionsBuilder<AgentDbContext>();
-        optionsBuilder.UseNpgsql(cs, o =>
+        optionsBuilder.UseNpgsql(options.GetExtension<NpgsqlOptionsExtension>().ConnectionString, o =>
         {
             o.UseNodaTime();
+            o.ConfigureDataSource(oo =>
+            {
+                oo.EnableDynamicJson();
+            });
         }).UseSnakeCaseNamingConvention();
 
         return optionsBuilder.Options;

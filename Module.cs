@@ -18,16 +18,7 @@ public class Module: IModule
         var dataSettings = services.AddSettings<LogrusSmithSettings>(configuration);
         services.AddDbContext<AgentDbContext>(options =>
         {
-            options
-                .UseNpgsql(dataSettings.DbConnectionString, o =>
-                {
-                    o.UseNodaTime();
-                    o.ConfigureDataSource(oo =>
-                    {
-                        oo.EnableDynamicJson();
-                    });
-                })
-                .UseSnakeCaseNamingConvention();
+            options.UseNpgsql(dataSettings.DbConnectionString);
         }, ServiceLifetime.Transient);
         services.AddSingleton<Func<AgentDbContext>>(sp => sp.GetRequiredService<AgentDbContext>);
         services.AddTransient<AgentHypervisor>();
