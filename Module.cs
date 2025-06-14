@@ -27,8 +27,10 @@ public class Module: IModule
         services.AddHangfireServer();
         services.AddHangfire(config =>
         {
-            config.UsePostgreSqlStorage(c =>
-                c.UseNpgsqlConnection(dataSettings.DbConnectionString));
+            config.UsePostgreSqlStorage(c => c.UseNpgsqlConnection(dataSettings.DbConnectionString), new PostgreSqlStorageOptions()
+            {
+                InvisibilityTimeout = TimeSpan.FromHours(24),
+            });
             config.UseConsole();
         });
         services.AddSingleton<DistributedLockFactory>();
