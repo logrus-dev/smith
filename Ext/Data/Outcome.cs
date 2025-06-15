@@ -1,6 +1,6 @@
 namespace Logrus.Smith.Ext.Data;
 
-public enum OutcomeType
+public enum Outcome
 {
     /// <summary>
     /// First outcome in the series.
@@ -13,7 +13,7 @@ public enum OutcomeType
     Unchanged,
 
     /// <summary>
-    /// This outcome improves solution, comparing to the previous outcome.
+    /// This outcome improves the solution, comparing to the previous outcome.
     /// </summary>
     Improved,
 

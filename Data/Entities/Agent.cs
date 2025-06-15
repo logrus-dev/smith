@@ -12,5 +12,6 @@ public class Agent
     public required Dictionary<string, string> Params { get; set; }
     public required Instant CreatedAt { get; init; }
     public required Instant UpdatedAt { get; set; }
-    public required ICollection<AgentOutcome> Outcomes { get; init; }
+    public bool IsActive { get; set; }
+    public required ICollection<Artifact> Artifacts { get; init; }
 }

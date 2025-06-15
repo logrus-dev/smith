@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Logrus.Smith.Migrations
+namespace Logrus.Smith.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

@@ -8,7 +8,7 @@ namespace Logrus.Smith.Data;
 public class AgentDbContext: DbContext
 {
     public DbSet<Agent> Agents => Set<Agent>();
-    public DbSet<AgentOutcome> AgentOutcomes => Set<AgentOutcome>();
+    public DbSet<Artifact> AgentOutcomes => Set<Artifact>();
 
     protected AgentDbContext()
     {

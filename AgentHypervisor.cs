@@ -31,28 +31,34 @@ public class AgentHypervisor(Func<AgentDbContext> getDb, IPluginCollection<IAgen
         context.WriteLine(ConsoleTextColor.Blue, "Discovered {0} agents", agents.Length);
     }
 
-    [AutomaticRetry(Attempts = 0)]
+    [AutomaticRetry(Attempts = 1, DelaysInSeconds = [10])]
     public async Task RunAgent(long id, CancellationToken ct, PerformContext context)
     {
         await using (await dlock.Acquire($"RunAgent/{id}"))
         {
-            var db = getDb();
-            var agent = await db.Agents.Include(x => x.Outcomes).FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new Exception($"Agent {id} not found");
-            WakeUpResult outcome;
+            WakeUpResult wakeUpResult;
             do
             {
-                context.WriteLine(ConsoleTextColor.Blue, "Waking up agent");
-                outcome = await WakeUpAgent(agent);
-                if (outcome.Type == OutcomeType.Interrupted)
+                var db = getDb();
+                var agent = await db.Agents.Include(x => x.Artifacts).FirstOrDefaultAsync(x => x.Id == id)
+                    ?? throw new Exception($"Agent {id} not found");
+                if (!agent.IsActive)
                 {
-                    context.WriteLine(ConsoleTextColor.Yellow, "Agent interrupted: {0}", outcome.Message);
+                    Log.Information("Agent {AgentId} is disabled", id);
+                    context.WriteLine(ConsoleTextColor.Yellow, "Agent is disabled");
                     return;
                 }
-                context.WriteLine(ConsoleTextColor.Blue, "Agent has produced an outcome {0}: {1}", outcome.Type, outcome.Message);
+                context.WriteLine(ConsoleTextColor.Blue, "Waking up agent");
+                wakeUpResult = await WakeUpAgent(agent);
+                if (wakeUpResult.Outcome == Outcome.Interrupted)
+                {
+                    context.WriteLine(ConsoleTextColor.Yellow, "Agent interrupted: {0}", wakeUpResult.Message);
+                    return;
+                }
+                context.WriteLine(ConsoleTextColor.Blue, "Agent has produced an outcome {0}: {1}", wakeUpResult.Outcome, wakeUpResult.Message);
 
                 await db.SaveChangesAsync();
-            } while (outcome.Type != OutcomeType.Completed && !ct.IsCancellationRequested);
+            } while (wakeUpResult.Outcome != Outcome.Completed && !ct.IsCancellationRequested);
 
             if (ct.IsCancellationRequested)
             {
@@ -60,7 +66,7 @@ public class AgentHypervisor(Func<AgentDbContext> getDb, IPluginCollection<IAgen
                 context.WriteLine(ConsoleTextColor.Yellow, "Agent was cancelled");
             }
 
-            if (outcome.Type == OutcomeType.Completed)
+            if (wakeUpResult.Outcome == Outcome.Completed)
             {
                 Log.Information("Agent {AgentId} has successfully completed", id);
                 context.WriteLine(ConsoleTextColor.Green, "Agent has successfully completed");
@@ -73,11 +79,11 @@ public class AgentHypervisor(Func<AgentDbContext> getDb, IPluginCollection<IAgen
         var handler = agentHandlers[agent.Key];
         var result = await handler.WakeUp(new WakeUpParams(agent.InitialState, agent.State, agent.Params));
         agent.State = result.State;
-        agent.Outcomes.Add(new AgentOutcome
+        agent.Artifacts.Add(new Artifact
         {
             CreatedAt = SystemClock.Instance.GetCurrentInstant(),
             Data = result.Data,
-            Type = result.Type,
+            Outcome = result.Outcome,
             Agent = agent,
             Message = result.Message,
             Score = result.Score,

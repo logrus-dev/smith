@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Logrus.Smith.Migrations
+namespace Logrus.Smith.Data.Migrations
 {
     /// <inheritdoc />
     public partial class SchemaUpdates : Migration

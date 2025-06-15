@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using Logrus.Smith.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Logrus.Smith.Migrations
+namespace Logrus.Smith.Data.Migrations
 {
     [DbContext(typeof(AgentDbContext))]
-    partial class AgentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250523061833_SchemaUpdates")]
+    partial class SchemaUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
